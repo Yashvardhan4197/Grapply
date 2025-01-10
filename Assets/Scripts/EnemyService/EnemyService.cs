@@ -1,4 +1,5 @@
 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +7,9 @@ public class EnemyService : MonoBehaviour
 {
     private EnemyPool enemyPool;
     private List<Transform> currentlySpawnedEnemies;
+    private bool isGameRunning;
     [SerializeField] float enemyRadius;
+    [SerializeField] float totalEnemies;
     [SerializeField] EnemyView enemyPrefab;
     private void Awake()
     {
@@ -23,6 +26,13 @@ public class EnemyService : MonoBehaviour
     public void OnGameStart()
     {
         currentlySpawnedEnemies.Clear();
+        isGameRunning = true;
+
+        while(currentlySpawnedEnemies.Count<3)
+        {
+            SpawnEnemy();
+        }
+        
     }
 
 
@@ -63,6 +73,7 @@ public class EnemyService : MonoBehaviour
             currentlySpawnedEnemies.Remove(enemyController.GetEnemyTransform());
         }
         enemyPool.ReturnToPool(enemyController);
+        
     }
 
 }
