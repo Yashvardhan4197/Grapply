@@ -1,5 +1,5 @@
 ﻿
-using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController
@@ -68,8 +68,10 @@ public class PlayerController
     }
     public void EndGrapple(Transform grappledObjectTransform)
     {
-        //playerView.GetLineRenderer().enabled = false;
         SetIsGrapple(false);
+        playerView.GetLineRenderer().enabled = false;
         grappledObjectTransform = null;
     }
+
+
 }
