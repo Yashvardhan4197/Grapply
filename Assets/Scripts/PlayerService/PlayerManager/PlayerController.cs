@@ -1,4 +1,6 @@
 ﻿
+using System;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -10,6 +12,10 @@ public class PlayerController
     private float grappleSpeed;
     private bool isGrappling;
     private Animator playerAnimator;
+    private List<Transform> enemiesInRadius;
+
+
+
     public bool IsDead {  get { return isDead; } }
     public float GrappleDistance {  get { return grappleDistance; } }
     public bool IsGrappling { get { return isGrappling; } }
@@ -20,11 +26,13 @@ public class PlayerController
         playerAnimator = playerView.GetPlayerAnimator();
         grappleDistance = 10f;
         grappleSpeed = 5f;
+        enemiesInRadius = new List<Transform>();
     }
 
     public void OnGameStart()
     {
         SetPlayerAliveStatus(true);
+        enemiesInRadius.Clear();
     }
 
 
@@ -73,5 +81,36 @@ public class PlayerController
         grappledObjectTransform = null;
     }
 
+    public void AddEnemyInRadius(Transform transform)
+    {
+        enemiesInRadius.Add(transform);
+    }
+
+    public void RemoveEnemyFromRadius(Transform transform)
+    {
+        if (enemiesInRadius.Contains(transform))
+        {
+            enemiesInRadius.Remove(transform);
+        }
+    }
+
+
+    public void OnSpaceClicked()
+    {
+        List<Transform>toDestroy = new List<Transform>();
+        foreach(Transform t in enemiesInRadius)
+        {
+            toDestroy.Add(t);
+        }
+
+        foreach(Transform t in toDestroy)
+        {
+            enemiesInRadius.Remove(t);
+            //change later
+            t.gameObject.SetActive(false);
+        }
+
+
+    }
 
 }

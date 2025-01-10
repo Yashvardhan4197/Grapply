@@ -1,5 +1,4 @@
 ﻿
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -8,12 +7,13 @@ public class PlayerView : MonoBehaviour
 
     private PlayerController playerController;
     private Transform grappledObjectTransform;
-    private Vector2 currentDirection;
     [SerializeField] Animator playerAnimator;
     [SerializeField] Transform muzzleTransfrom;
     [SerializeField] Transform grappleGunTransform;
+    [SerializeField] Transform playerRadiusTransform;
     [SerializeField] LineRenderer lineRenderer;
     [SerializeField] LayerMask ignoreLayer;
+    [SerializeField] float playerRadiusRotationSpeed;
     public void SetController(PlayerController playerController)
     {
         this.playerController = playerController;
@@ -28,10 +28,25 @@ public class PlayerView : MonoBehaviour
             playerController?.SetPlayerDirection(mouseWorldPos);
             WeaponMove(mouseWorldPos);
             Grapple(mouseWorldPos);
+            GatherEnemies();
+            RotatePlayerRadius();
             if(playerController.IsGrappling==true&&grappledObjectTransform!=null)
             {
                 UpdateLineRenderer();
             }
+        }
+    }
+
+    private void RotatePlayerRadius()
+    {
+        playerRadiusTransform.Rotate(Vector3.forward * Time.deltaTime * playerRadiusRotationSpeed);
+    }
+
+    private void GatherEnemies()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            playerController.OnSpaceClicked();
         }
     }
 
@@ -72,7 +87,6 @@ public class PlayerView : MonoBehaviour
 
                 lineRenderer.enabled = true;
                 lineRenderer.SetPosition(0,ray.origin);
-                currentDirection = ray.direction;
                 
             }
 
